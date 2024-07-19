@@ -26,7 +26,7 @@ def masks2polypoints(masks, strategy="all"):
 def pix2pc(pixels, width, height):
     """Convert pixel coordinates to pc locations."""
     pc = np.apply_along_axis(
-        lambda x: np.r_[x[0] / 1800 * 100, x[1] / 1200 * 100], -1, pixels
+        lambda x: np.r_[x[0] / width * 100, x[1] / height * 100], -1, pixels
     )
     return pc
 
