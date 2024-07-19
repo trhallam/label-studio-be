@@ -14,16 +14,16 @@ from label_studio_ml.utils import InMemoryLRUDictCache
 
 import label_studio_sdk._extensions.label_studio_tools.core.utils.io as lsio
 
-LBSE_ACCESS_TOKEN = os.environ.get("LBSE_ACCESS_TOKEN")
-LBSE_HOST = os.environ.get("LBSE_HOST")
+LSBE_ACCESS_TOKEN = os.environ.get("LSBE_ACCESS_TOKEN")
+LSBE_HOST = os.environ.get("LSBE_HOST")
 
 
 def get_media_path(url: Union[str, os.PathLike], task):
     """ """
     media_path = lsio.get_local_path(
         url,
-        access_token=LBSE_ACCESS_TOKEN,
-        hostname=LBSE_HOST,
+        access_token=LSBE_ACCESS_TOKEN,
+        hostname=LSBE_HOST,
         task_id=task.get("id"),
     )
     return media_path
