@@ -1,13 +1,18 @@
-version: "3.8"
+name: label-studio-backend
 
 services:
   ml-backend:
-    container_name: ml-backend
-    image: humansignal/ml-backend:v0
+    container_name: label-studio-be
+    network_mode: "host"
     build:
-      context: .
-      args:
-        TEST_ENV: ${TEST_ENV}
+      context: app
+      tags:
+        - trhallam/label-studio-be:dev
+      # args:
+      #   TEST_ENV: ${TEST_ENV}
+    command: conda run -n label-studio-be --no-capture-output python /app/_wsgi.py
+      # ls -la
+      # conda run -n label-studio-be --no-capture-output python /app/_wsgi.py
     environment:
       # specify these parameters if you want to use basic auth for the model server
       - BASIC_AUTH_USER=
@@ -27,9 +32,18 @@ services:
       # Do not use 'localhost' as it does not work within Docker containers.
       # Use prefix 'http://' or 'https://' for the URL always.
       # Determine the actual IP using 'ifconfig' (Linux/Mac) or 'ipconfig' (Windows).
-      - LABEL_STUDIO_URL=
-      - LABEL_STUDIO_API_KEY=
+      - LABEL_STUDIO_URL=http://0.0.0.0:8080
+      - LBSE_ACCESS_TOKEN=82d2dedc2777c40db97f4cc33a81d804886d96f1
+      - LBSE_HOST=http://0.0.0.0:8080
+      - LSBE_MODEL_NAME=SAM
+      # - LSBE_MODEL_PATH=/models/sam/sam_vit_h_4b8939.pth
+      - LSBE_MODEL_PATH=/models/sam/sam_vit_b_01ec64.pth
+      - LSBE_SAM_MODEL_TYPE=vit_b
     ports:
       - "9090:9090"
     volumes:
-      - "./data/server:/data"
+      - ".:/app/label_studio_be"
+      # set this to your models path
+      - "~/projects/models:/models"
+      # for testing
+      - "~/projects/models:/app/label_studio_be/tests/resources/.cache"

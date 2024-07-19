@@ -1,0 +1,100 @@
+title: SAM Segmentation with Masks
+type: community
+group: Computer Vision
+order: 2
+image: /static/templates/semantic-segmentation-with-masks.png
+details: <h1>Use SAM backend for automatic segmentation tasks</h1>
+config: |
+  <!-- {} --><View>
+  <Style>
+    .main {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 10px 5px 5px 5px;
+    }
+    .container {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .column {
+      flex: 1;
+      padding: 10px;
+      margin: 5px; 
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    .column .title {
+      margin: 0;
+      color: #333;
+    }
+    .column .label {
+      margin-top: 10px;
+      padding: 10px;
+      padding-bottom: 7px; 
+      background-color: #f9f9f9;
+      border-radius: 3px;
+    }
+    .lsf-labels {
+      margin: 5px 0 0 0; 
+    }
+    .image-container {
+      width: 100%;
+      height: 300px;
+      background-color: #ddd;
+      border-radius: 10px;
+    }
+  </Style>
+    
+  <!-- Don't change or add to these labels. -->
+  <View className="main">
+    <View className="container">
+      <View className="container">
+        
+        <View className="column">
+          <HyperText value="" name="rect-h" className="help" inline="true">
+      		Rect Labels (smart)
+    	  </HyperText> 
+          <RectangleLabels name="rect" smart="true" toName="image">
+            <Label value="building" background="#FFA39E"/><Label value="vehicle" background="#D4380D"/>
+          </RectangleLabels>
+        </View>
+      
+        <View className="column">
+          <HyperText value="" name="keypoint-h" className="help" inline="true">
+      		Keypoint Labels (smartOnly)
+    	  </HyperText> 
+          <KeyPointLabels name="kp" smartOnly="true" toName="image">
+            <Label value="building" background="#FFC069"/><Label value="vehicle" background="#AD8B00"/>
+          </KeyPointLabels>
+        </View>
+
+        <View className="column">
+          <HyperText value="" name="polygon-h" className="help" inline="true">
+      		Polygon Labels
+    	  </HyperText> 
+          <PolygonLabels name="polygon" toName="image">
+            <Label value="building" background="#D3F261"/><Label value="vehicle" background="#389E0D"/>
+          </PolygonLabels>
+        </View>
+        <View className="column">         
+           <HyperText value="" name="brush-h" className="help" inline="true">
+      		Brush Labels
+    	  </HyperText> 
+          <BrushLabels name="brush" toName="image">
+            <Label value="building" background="#5CDBD3"/><Label value="vehicle" background="#096DD9"/>
+          </BrushLabels>
+        </View>
+      </View> 
+
+    </View>
+    
+    <View className="image-container">
+      <Image name="image" value="$image" zoom="true" zoomControl="true" grid="true" crosshair="true" />
+    </View>
+    
+  </View>
+  </View>

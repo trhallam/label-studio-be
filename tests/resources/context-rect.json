@@ -1,0 +1,24 @@
+{
+    "result": [
+        {
+            "original_width": 1800,
+            "original_height": 1200,
+            "image_rotation": 0,
+            "value": {
+                "x": 7.200647249190946,
+                "y": 23.300970873786408,
+                "width": 87.8640776699029,
+                "height": 46.359223300970854,
+                "rotation": 0,
+                "rectanglelabels": [
+                    "vehicle"
+                ]
+            },
+            "id": "IYy7OeAJ46",
+            "from_name": "rect",
+            "to_name": "image",
+            "type": "rectanglelabels",
+            "origin": "manual"
+        }
+    ]
+}

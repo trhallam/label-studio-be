@@ -1,0 +1,48 @@
+{
+    "result": [
+        {
+            "original_width": 1800,
+            "original_height": 1200,
+            "image_rotation": 0,
+            "value": {
+                "x": 7.84789644012945,
+                "y": 59.22330097087378,
+                "width": 0.16181229773462785,
+                "labels": [
+                    "vehicle"
+                ],
+                "keypointlabels": [
+                    "vehicle"
+                ]
+            },
+            "is_positive": true,
+            "id": "QE0vOoXfgz",
+            "from_name": "kp",
+            "to_name": "image",
+            "type": "keypointlabels",
+            "origin": "manual"
+        },
+        {
+            "original_width": 1800,
+            "original_height": 1200,
+            "image_rotation": 0,
+            "value": {
+                "x": 65.45307443365695,
+                "y": 46.601941747572816,
+                "width": 0.16181229773462785,
+                "labels": [
+                    "vehicle"
+                ],
+                "keypointlabels": [
+                    "vehicle"
+                ]
+            },
+            "is_positive": true,
+            "id": "a35BZH64Oq",
+            "from_name": "kp",
+            "to_name": "image",
+            "type": "keypointlabels",
+            "origin": "manual"
+        }
+    ]
+}

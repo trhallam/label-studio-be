@@ -1,0 +1,15 @@
+channels:
+  - conda-forge
+  - default
+
+envs_dirs:
+  - /opt/conda/envs
+  - ~/.conda/envs
+
+pkgs_dirs:
+  - /opt/conda/pkgs
+  - ~/.conda/pkgs
+
+default_threads: 4
+
+solver: libmamba

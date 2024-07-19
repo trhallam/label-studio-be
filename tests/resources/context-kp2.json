@@ -1,0 +1,26 @@
+{
+    "result": [
+        {
+            "original_width": 1800,
+            "original_height": 1200,
+            "image_rotation": 0,
+            "value": {
+                "x": 61.89320388349514,
+                "y": 49.87864077669903,
+                "width": 0.16181229773462785,
+                "labels": [
+                    "building"
+                ],
+                "keypointlabels": [
+                    "building"
+                ]
+            },
+            "is_positive": true,
+            "id": "Z9fflZJsYG",
+            "from_name": "kp",
+            "to_name": "image",
+            "type": "keypointlabels",
+            "origin": "manual"
+        }
+    ]
+}
