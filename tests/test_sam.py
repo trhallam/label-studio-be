@@ -41,3 +41,9 @@ def test_sam_predict_rectangles(
 
     # check the response is jsonable
     json.dumps(results.model_dump())
+
+
+def test_sam_annotate_everything(
+    sam_model: SamModel, local_test_image, context_preanno
+):
+    results = sam_model.predict(context_preanno)

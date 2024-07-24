@@ -32,6 +32,13 @@ def context_task():
 
 
 @pytest.fixture(scope="session")
+def context_preanno():
+    with open(TESTS_PATH / "resources" / "context-preanno.json") as f:
+        doc = json.load(f)
+    return doc
+
+
+@pytest.fixture(scope="session")
 def model_sam_vit_h():
     return get_model("vit_h", TESTS_PATH / "resources" / ".cache/sam")
 

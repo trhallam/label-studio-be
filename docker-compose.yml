@@ -33,8 +33,8 @@ services:
       # Use prefix 'http://' or 'https://' for the URL always.
       # Determine the actual IP using 'ifconfig' (Linux/Mac) or 'ipconfig' (Windows).
       - LABEL_STUDIO_URL=http://0.0.0.0:8080
-      - LBSE_ACCESS_TOKEN=82d2dedc2777c40db97f4cc33a81d804886d96f1
-      - LBSE_HOST=http://0.0.0.0:8080
+      - LSBE_ACCESS_TOKEN=82d2dedc2777c40db97f4cc33a81d804886d96f1
+      - LSBE_HOST=http://0.0.0.0:8080
       - LSBE_MODEL_NAME=SAM
       # - LSBE_MODEL_PATH=/models/sam/sam_vit_h_4b8939.pth
       - LSBE_MODEL_PATH=/models/sam/sam_vit_b_01ec64.pth

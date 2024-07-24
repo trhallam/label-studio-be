@@ -15,8 +15,10 @@ def masks2polypoints(masks, strategy="all"):
         polygons (List): list of polygons from masks
     """
     polys = []
-    for x in masks.astype("uint8"):
-        contours = cv2.findContours(x, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
+    for x in masks:
+        contours = cv2.findContours(
+            x.astype("uint8"), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+        )[0]
         for k in contours:
             k = k.reshape(-1, 2).astype("float32")
             polys.append(k)

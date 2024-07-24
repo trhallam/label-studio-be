@@ -1,0 +1,73 @@
+[
+    {
+        "id": 2,
+        "data": {
+            "image": "/data/upload/2/1b1ca7a6-truck.jpg"
+        },
+        "meta": {},
+        "created_at": "2024-07-17T10:17:10.021166Z",
+        "updated_at": "2024-07-19T09:38:28.828235Z",
+        "is_labeled": true,
+        "overlap": 1,
+        "inner_id": 1,
+        "total_annotations": 1,
+        "cancelled_annotations": 0,
+        "total_predictions": 0,
+        "comment_count": 0,
+        "unresolved_comment_count": 0,
+        "last_comment_updated_at": null,
+        "project": 2,
+        "updated_by": 2,
+        "file_upload": 2,
+        "comment_authors": [],
+        "predictions": []
+    },
+    {
+        "id": 3,
+        "data": {
+            "image": "/data/upload/2/1b1ca7a6-truck.jpg"
+        },
+        "meta": {},
+        "created_at": "2024-07-24T10:27:31.918431Z",
+        "updated_at": "2024-07-24T10:27:31.918460Z",
+        "is_labeled": false,
+        "overlap": 1,
+        "inner_id": 2,
+        "total_annotations": 0,
+        "cancelled_annotations": 0,
+        "total_predictions": 0,
+        "comment_count": 0,
+        "unresolved_comment_count": 0,
+        "last_comment_updated_at": null,
+        "project": 2,
+        "updated_by": null,
+        "file_upload": 3,
+        "comment_authors": [],
+        "annotations": [],
+        "predictions": []
+    },
+    {
+        "id": 4,
+        "data": {
+            "image": "/data/upload/2/1b1ca7a6-truck.jpg"
+        },
+        "meta": {},
+        "created_at": "2024-07-24T10:27:31.918506Z",
+        "updated_at": "2024-07-24T10:27:31.918514Z",
+        "is_labeled": false,
+        "overlap": 1,
+        "inner_id": 3,
+        "total_annotations": 0,
+        "cancelled_annotations": 0,
+        "total_predictions": 0,
+        "comment_count": 0,
+        "unresolved_comment_count": 0,
+        "last_comment_updated_at": null,
+        "project": 2,
+        "updated_by": null,
+        "file_upload": 4,
+        "comment_authors": [],
+        "annotations": [],
+        "predictions": []
+    }
+]
