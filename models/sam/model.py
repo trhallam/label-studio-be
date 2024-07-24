@@ -202,7 +202,7 @@ class SamModel(LabelStudioMLBase, SamAutomaticMaskGenerator):
 
     def setup(self):
         """Configure any parameters of your model here"""
-        self.set("model_version", "0.0.1")
+        self.set("model_version", "0.1.0")
 
     def _get_points(self, context: Dict) -> Tuple[List, List]:
         """Process the context to return SAM compatible points"""
@@ -390,7 +390,7 @@ class SamModel(LabelStudioMLBase, SamAutomaticMaskGenerator):
 
         predictions = [
             {
-                "model_version": str(self.model_version),
+                "model_version": f"SAM {str(self.model_version)}",
                 "score": float(np.average(probs)),
                 "result": mask_results + polygon_results,
             }
@@ -449,7 +449,7 @@ class SamModel(LabelStudioMLBase, SamAutomaticMaskGenerator):
 
             predictions.append(
                 {
-                    "model_version": str(self.model_version),
+                    "model_version": f"SAM {str(self.model_version)}",
                     "score": float(np.average(probs)),
                     "result": mask_results + polygon_results,
                 }
