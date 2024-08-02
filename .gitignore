@@ -1,4 +1,10 @@
 tests/resources/.cache
+/dist
 __pycache__
 .pytest_cache
 .vscode
+
+_version.py
+
+
+.vscode/

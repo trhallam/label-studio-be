@@ -1,0 +1,63 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+only-packages = true
+sources = ["src"]
+
+[project]
+name = "label-studio-berq"
+dynamic = ["version"]
+description = "An RQ based client/worker model backend for Label Studio"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+authors = [
+    { name = "Tony Hallam"},
+]
+keywords = [
+    "label-studio"
+]
+dependencies = [
+    "fastapi[standard]",
+    "rq",
+    "label_studio_ml",
+    "label_studio_sdk",
+]
+
+[tool]
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/label_studio_berq/_version.py"
+
+[tool.hatch.version.raw-options]
+local_scheme = "no-local-version"
+
+[tool.hatch.envs.default.scripts]
+# quick links to start the API server in dev/run modes.
+dev = [
+    "fastapi dev src/label_studio_berq/api"
+]
+run = [
+    "fastapi run src/label_studio_berq/api"
+]
+rq-worker-dev = [
+    "rq worker -v --logging_level INFO --max-idle-time 9999999999 --worker-class 'label_studio_berq.worker.LabelStudioBEWorker' berq"
+]
+
+[tool.hatch.envs.hatch-test]
+extra-dependencies = [
+    "pytest",
+    "pytest-redis"
+]
+
+[[tool.hatch.envs.hatch-test.matrix]]
+python = ["3.12", "3.11", "3.10"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "examples"]
+testpaths = ["tests"]
