@@ -17,8 +17,11 @@ import torch
 from segment_anything import SamPredictor, sam_model_registry, SamAutomaticMaskGenerator
 from segment_anything.utils.amg import build_all_layer_point_grids
 
-from ..mediaret import MediaCache
-from ..utils import masks2polypoints, pix2pc, simplify_polygon
+from label_studio_berq.mediaret import MediaCache
+from label_studio_berq.utils import masks2polypoints, pix2pc, simplify_polygon
+
+MODEL_NAME = "MetaSAM"
+MODEL_VERSION = "0.1.0"
 
 logger = logging.getLogger("SamModel")
 
@@ -166,14 +169,15 @@ class SamModel(LabelStudioMLBase, SamAutomaticMaskGenerator):
         LSBE_SAM_MODEL_TYPE [vit_l, vit_b, vit_h]
     """
 
+    model_name = MODEL_NAME
+    model_version = MODEL_VERSION
+
     def __init__(
         self,
-        model_name: str = "SamModel",
         project_id: Optional[str] = None,
         label_config=None,
     ):
         super().__init__(project_id=project_id, label_config=label_config)
-        self.model_name = model_name
         self.cache = MediaCache(10)
 
         if path := os.environ.get("LSBE_MODEL_PATH"):
