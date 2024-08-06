@@ -29,7 +29,7 @@ async def root():
 
 @app.get("/{queue_id}/health", description="The health of the API Server")
 async def health(queue_id: str):
-    queues_json = get_rq_available_queues()
+    queues_json = await get_rq_available_queues()
     if queue_id in queues_json:
         return {"status": "UP", "MODEL_CLASS": f"{queue_id}"}
     else:
@@ -46,23 +46,25 @@ async def metric():
 
 @app.post("/{queue_id}/setup")
 async def setup(queue_id: str, request: SetupModel):
+    """Setup is called by LabelStudio when connecting to a Backend ML model.
 
+    Here, we store the request in redis so that workers can access it - especially
+    the extra_params - provided as a json string from LabelStudio - which can be used to control the model.
+
+    For the setup to work, a worker must be active with an appropriate queue_id.
+    """
     connection = get_redis_connection()
-    queues_json = get_rq_available_queues()
+    queues_json = await get_rq_available_queues()
     queue_workers = queues_json.get(queue_id, None)
 
     project_key = f"{REDIS_PROJECT_PREFIX}{request.project}"
     connection.hset(project_key, "setup", request.model_dump_json())
-    # Deserialize in Worker as
-    # SetupModel.model_validate_json(connection.hget(project_key, "setup"))
 
     if queue_workers:
-        queue = Queue(connection=connection, name=queue_id)
-        model_version = get_model_version(queue)
-        # validate worker can access setup
-        redis_setup = get_project_setup(queue, request.project)
-
-        results = asyncio.gather(model_version, redis_setup)
+        queue = Queue(queue_id, connection=connection)
+        model_version, project_setup = await asyncio.gather(
+            get_model_version(queue), get_project_setup(queue, request.project)
+        )
 
         response = JSONResponse(
             content={"model_version": model_version, "nworkers": len(queue_workers)}
@@ -75,7 +77,6 @@ async def setup(queue_id: str, request: SetupModel):
 
 
 @app.post("/{queue_id}/predict")
-# async def predict(request: PredictModel, queue_id: str):
 async def predict(request: Request, queue_id: str):
     # TODO: Get things from request into redis (like extra_params)
 
@@ -101,12 +102,12 @@ async def predict(request: Request, queue_id: str):
 
 @app.get("/status")
 async def status():
-    return get_rq_worker_status()
+    return await get_rq_worker_status()
 
 
 @app.get("/rq-queues")
 async def rq_queues():
-    queues_json = get_rq_available_queues()
+    queues_json = await get_rq_available_queues()
     return dict(queues_json)
 
 

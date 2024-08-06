@@ -1,0 +1,30 @@
+---
+services:
+  redis:
+    image: valkey/valkey:latest
+    ports:
+      - "6379:6379"
+  worker:
+    depends_on:
+      redis:
+        condition: service_started
+    build:
+      context: .
+      additional_contexts:
+        - project=../.
+      dockerfile: docker/worker.Dockerfile
+    entrypoint: ""
+    command:
+      - rq
+      - worker
+      - -v
+      - --logging_level
+      - INFO
+      - --max-idle-time
+      - "9999999999"
+      - --worker-class
+      - label_studio_berq.worker.LabelStudioBEWorker
+      - -u
+      - "redis://redis:6379"
+      - pytest1
+      - pytest2

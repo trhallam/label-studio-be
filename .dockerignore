@@ -1,0 +1,8 @@
+.vscode
+.pytest_cache
+annotation-templates
+app-old
+dist
+examples
+models
+tests

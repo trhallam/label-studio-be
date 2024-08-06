@@ -52,7 +52,8 @@ rq-worker-dev = [
 [tool.hatch.envs.hatch-test]
 extra-dependencies = [
     "pytest",
-    "pytest-redis"
+    "pytest-asyncio",
+    "pytest-docker"
 ]
 
 [[tool.hatch.envs.hatch-test.matrix]]
