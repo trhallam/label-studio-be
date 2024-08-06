@@ -31,3 +31,10 @@ def context_preanno():
     with open(TESTS_PATH / "resources" / "context-preanno.json") as f:
         doc = json.load(f)
     return doc
+
+
+@pytest.fixture(scope="session")
+def predict_json():
+    with open(TESTS_PATH / "resources" / "predict.json") as f:
+        doc = json.load(f)
+    return doc

@@ -13,3 +13,7 @@ def test_SetupModel():
         "extra_params": "{'a':'a', 'b':2.0}",
     }
     SetupModel.model_validate_json(json.dumps(json_data), strict=True)
+
+
+def test_PredictModel(predict_json):
+    PredictModel.model_validate_json(json.dumps(predict_json), strict=True)

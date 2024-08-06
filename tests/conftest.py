@@ -1,16 +1,8 @@
 import pytest
-import json
-import yaml
 import pathlib
 from multiprocessing import Process
 
-from rq.job import Job
 from rq import Queue, SimpleWorker
-
-from fakeredis import FakeStrictRedis, FakeServer
-
-
-import label_studio_sdk._extensions.label_studio_tools.core.utils.io
 
 TESTS_PATH = pathlib.Path(__file__).parent
 
@@ -19,52 +11,15 @@ from label_studio_berq.worker import LabelStudioBEWorker
 from tests.fixtures_resources import *
 
 
-# @pytest.fixture(scope="session")
-# def model_sam_vit_h():
-#     return get_model("vit_h", TESTS_PATH / "resources" / ".cache/sam")
-
-
-# @pytest.fixture(scope="session")
-# def model_sam_vit_b():
-#     return get_model("vit_b", TESTS_PATH / "resources" / ".cache/sam")
-
-
-# @pytest.fixture(scope="session")
-# def label_config_sam():
-#     with open(TESTS_PATH / "../annotation-templates/SAM-segmentation.yml") as f:
-#         config = yaml.load(f, Loader=yaml.SafeLoader)
-#     return config["config"]
-
-
-# @pytest.fixture()
-# def local_test_image(monkeypatch):
-
-#     def mock_get_local_path(img_path, **kwargs):
-#         return TESTS_PATH / "resources" / pathlib.Path(img_path).name
-
-#     monkeypatch.setattr(
-#         "label_studio_sdk._extensions.label_studio_tools.core.utils.io.get_local_path",
-#         mock_get_local_path,
-#     )
-#     return None
-
-
 @pytest.fixture(scope="function")
 def patch_redis(redisdb, monkeypatch):
 
-    def force_fakeredis(*args, **kwargs):
+    def force_pytest_redis(*args, **kwargs):
         return redisdb
 
     monkeypatch.setattr(
-        "label_studio_berq.api.utils.get_redis_connection", force_fakeredis
+        "label_studio_berq.api.utils.get_redis_connection", force_pytest_redis
     )
-
-
-def test_get_rq_available_queues(redisdb, rqworker):
-    with rqworker as _:
-        queue_info = get_rq_available_queues(connection=redisdb)
-        result = asyncio.run(queue_info)
-    assert len(result) == 2
 
 
 class WorkerContext:

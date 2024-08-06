@@ -1,0 +1,59 @@
+{
+    "tasks": [
+        {
+            "id": 3,
+            "data": {
+                "image": "/data/upload/2/d84f2ff1-frame0050.jpg"
+            },
+            "meta": {},
+            "created_at": "2024-07-24T10:27:31.918431Z",
+            "updated_at": "2024-07-24T13:42:39.380259Z",
+            "is_labeled": false,
+            "overlap": 1,
+            "inner_id": 2,
+            "total_annotations": 0,
+            "cancelled_annotations": 0,
+            "total_predictions": 0,
+            "comment_count": 0,
+            "unresolved_comment_count": 0,
+            "last_comment_updated_at": null,
+            "project": 2,
+            "updated_by": 2,
+            "file_upload": 3,
+            "comment_authors": [],
+            "annotations": [],
+            "predictions": []
+        },
+        {
+            "id": 4,
+            "data": {
+                "image": "/data/upload/2/2ef63369-frame0009.jpg"
+            },
+            "meta": {},
+            "created_at": "2024-07-24T10:27:31.918506Z",
+            "updated_at": "2024-07-24T13:07:16.779921Z",
+            "is_labeled": false,
+            "overlap": 1,
+            "inner_id": 3,
+            "total_annotations": 0,
+            "cancelled_annotations": 0,
+            "total_predictions": 0,
+            "comment_count": 0,
+            "unresolved_comment_count": 0,
+            "last_comment_updated_at": null,
+            "project": 2,
+            "updated_by": 2,
+            "file_upload": 4,
+            "comment_authors": [],
+            "annotations": [],
+            "predictions": []
+        }
+    ],
+    "project": "2.1721211404",
+    "label_config": "<!-- {} --><View></View>\n  </View>",
+    "params": {
+        "login": null,
+        "password": null,
+        "context": null
+    }
+}
