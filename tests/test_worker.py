@@ -8,7 +8,8 @@ from label_studio_berq.api.models import SetupModel
 from rq.worker_registration import get_keys as get_rq_worker_keys
 
 
-def test_LabelStudioBEWorker_init(redisdb):
+def test_LabelStudioBEWorker_init(test_services):
+    redisdb = test_services["redisdb"]
 
     queue = Queue("test-queue", connection=redisdb)
     worker = LabelStudioBEWorker([queue], connection=redisdb)
@@ -18,34 +19,21 @@ def test_LabelStudioBEWorker_init(redisdb):
     assert worker.name == worker_keys.pop().split(":")[-1]
 
 
-def test_LabelStudioBEWorker_get_project_setup_json(redisdb):
-
-    project = "3.111"
-    model = SetupModel(
-        **{
-            "project": project,
-            "schema": "<View></View>",
-            "hostname": "http://localhost:8080",
-            "access_token": "82d2dedc2777c40db97f4cc33a81d804886d96f1",
-            "extra_params": {"a": "aaa", "b": 2.0},
-        }
-    )
-
-    redisdb.hset(
-        f"lsberq:project:{project}",
-        "setup",
-        value=model.model_dump_json(),
-    )
-
+def test_LabelStudioBEWorker_get_project_setup_json(
+    test_services, lsproject_setup, lsproject_json
+):
+    redisdb = test_services["redisdb"]
+    model = SetupModel.model_validate_json(lsproject_json)
     queue = Queue("test-queue", connection=redisdb)
-    job = queue.enqueue("get_project_setup_json", project)
+    job = queue.enqueue("get_project_setup_json", model.project)
     worker = LabelStudioBEWorker([queue], connection=queue.connection)
     assert worker.work(burst=True)
     job.refresh()
     assert SetupModel.model_validate_json(job.result) == model
 
 
-def test_execute_job_version(redisdb):
+def test_execute_job_version(test_services):
+    redisdb = test_services["redisdb"]
 
     queue = Queue("test-queue", connection=redisdb)
     job = queue.enqueue("get_model_version")
@@ -53,3 +41,15 @@ def test_execute_job_version(redisdb):
     assert worker.work(burst=True)
     job.refresh()
     assert job.result == "0.0.1"
+
+
+def test_predict(test_services, lsproject_setup, lsproject_json):
+    # only test for blank result because basic LSBEWorker has no model
+    redisdb = test_services["redisdb"]
+    model = SetupModel.model_validate_json(lsproject_json)
+    queue = Queue("test-queue", connection=redisdb)
+    job = queue.enqueue("predict", model.project, [], context=None)
+    worker = LabelStudioBEWorker([queue], connection=queue.connection)
+    assert worker.work(burst=True)
+    job.refresh()
+    assert job.result == []

@@ -7,7 +7,7 @@ from label_studio_berq.api.utils import (
     get_rq_worker_status,
     get_model_version,
     get_project_setup,
-    get_model_prediction,
+    get_model_predictions,
 )
 
 

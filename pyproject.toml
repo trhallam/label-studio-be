@@ -22,11 +22,37 @@ keywords = [
 dependencies = [
     "fastapi[standard]",
     "rq",
-    "label_studio_ml",
+    "label_studio_ml @ git+https://github.com/HumanSignal/label-studio-ml-backend.git@145f328",
     "label_studio_sdk",
+    "label_studio_converter",
+    "click_params",
+]
+
+[project.optional-dependencies]
+full = [
+    "shapely",
+    "opencv-python-headless",
+]
+dev = [
+    "label-studio-berq[full]",
+    "black",
 ]
 
 [tool]
+
+[tool.hatch.envs.meta-sam]
+description = "An environment to run the Meta-SAM Worker example"
+python = "3.11"
+dev-mode = true
+extra-dependencies = [
+    "torch",
+    "torchvision",
+    "numpy",
+    "segment-anything @ git+https://github.com/facebookresearch/segment-anything.git",
+]
+features = [
+    "dev"
+]
 
 [tool.hatch.version]
 source = "vcs"
@@ -36,6 +62,9 @@ version-file = "src/label_studio_berq/_version.py"
 
 [tool.hatch.version.raw-options]
 local_scheme = "no-local-version"
+
+[tool.hatch.metadata]
+allow-direct-references = true
 
 [tool.hatch.envs.default.scripts]
 # quick links to start the API server in dev/run modes.

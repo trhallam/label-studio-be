@@ -12,7 +12,6 @@ def test_read_main():
     assert response.json() == {"message": "label-studio-be API Server"}
 
 
-# @pytest.mark.parametrize("queue", ("pytest1", "pytest2"), scope="session")
 def test_health(test_services, patch_redis):
     for queue in ("pytest1", "pytest2"):
         response = client.get(f"/{queue}/health")
@@ -21,7 +20,7 @@ def test_health(test_services, patch_redis):
         assert content["status"] == "UP"
 
 
-def test_status(patch_redis):
+def test_status(test_services, patch_redis):
     response = client.get("/status")
     worker_info = response.json()
     assert len(worker_info) == 1
@@ -29,13 +28,13 @@ def test_status(patch_redis):
     assert values["queues"] == "pytest1,pytest2"
 
 
-def test_rq_queues(patch_redis):
+def test_rq_queues(test_services, patch_redis):
     response = client.get("/rq-queues")
     queue_info = response.json()
     assert len(queue_info) == 2
 
 
-def test_setup(patch_redis):
+def test_setup(test_services, patch_redis):
     response = client.post(
         "/pytest1/setup",
         json={
@@ -52,5 +51,5 @@ def test_setup(patch_redis):
     assert content["model_version"] == "0.0.1"
 
 
-def test_predict_kp(patch_redis, context_kp):
-    response = client.post("/pytest1/predict", json=context_kp)
+def test_predict_kp(test_services, patch_redis, predict_json):
+    response = client.post("/pytest1/predict", json=predict_json)

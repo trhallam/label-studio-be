@@ -15,6 +15,7 @@ from .utils import (
     get_model_version,
     get_rq_worker_status,
     get_project_setup,
+    get_model_predictions,
 )
 
 app = FastAPI()
@@ -77,22 +78,24 @@ async def setup(queue_id: str, request: SetupModel):
 
 
 @app.post("/{queue_id}/predict")
-async def predict(request: Request, queue_id: str):
+async def predict(request: PredictModel, queue_id: str):
     # TODO: Get things from request into redis (like extra_params)
 
-    print(await request.body())
-
-    queues_json = get_rq_available_queues()
+    queues_json = await get_rq_available_queues()
     queue_workers = queues_json.get(queue_id, None)
 
     if queue_workers:
         connection = get_redis_connection()
+
+        project_setup = connection.hget(request.project, "setup")
+        print(project_setup)
+
         queue = Queue(connection=connection, name=queue_id)
 
-        model_version = get_model_version(queue)
-        response = JSONResponse(
-            content={"predict": model_version, "nworkers": len(queue)}
+        predictions = await get_model_predictions(
+            queue, project_setup.setup, request.tasks
         )
+        response = JSONResponse(content={})
     else:
         response = JSONResponse(
             status_code=400, content={"msg": f"ERROR: Unknown queue id {queue_id}"}

@@ -4,6 +4,10 @@ import json
 from label_studio_berq.api.models import SetupModel, PredictModel
 
 
+def test_SetupModel_json(lsproject_json):
+    SetupModel.model_validate_json(lsproject_json, strict=True)
+
+
 def test_SetupModel():
     json_data = {
         "project": "3.1722346376",

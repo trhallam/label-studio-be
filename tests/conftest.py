@@ -30,7 +30,7 @@ def worker_healthcheck(host: str, port: int):
     return False
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="session")
 def test_services(docker_ip, docker_services):
     """Start docker test services:
     - redis: A valkey redis server
@@ -68,3 +68,25 @@ def rqqueue(test_services):
     queue1 = Queue(name="pytest1", connection=redisdb)
     queue2 = Queue(name="pytest2", connection=redisdb)
     return [queue1, queue2]
+
+
+@pytest.fixture()
+def lsproject_json():
+    return """{
+        "project": "3.111",
+        "schema": "<View></View>",
+        "hostname": "http://localhost:8080",
+        "access_token": "82d2dedc2777c40db97f4cc33a81d804886d96f1",
+        "extra_params": "{\'a\':\'a\', \'b\':2.0}"
+    }"""
+
+
+@pytest.fixture()
+def lsproject_setup(test_services, lsproject_json):
+    redisdb = test_services["redisdb"]
+    redisdb.hset(
+        f"lsberq:project:3.111",
+        "setup",
+        value=lsproject_json,
+    )
+    return None

@@ -59,6 +59,16 @@ async def get_rq_available_queues(connection: Redis | None = None):
 
 
 def get_job_result(job: Job, queue: Queue, refresh_interval: float = 0.1) -> Job:
+    """Blocks while waiting for a function to finish.
+
+    Args:
+        job: Job to watch
+        queue: not needed
+        refresh_interval: the time between checks (s)
+
+    Returns:
+        finished job
+    """
     while True:
         status = job.get_status(refresh=True)
         if status in ["failed", "finished", "cancelled"]:
@@ -70,6 +80,7 @@ def get_job_result(job: Job, queue: Queue, refresh_interval: float = 0.1) -> Job
 async def get_model_version(
     queue: Queue, model_version_func: str = "get_model_version"
 ) -> str:
+    """Ask the worker to return the model version or worker.model_version"""
     job = queue.enqueue(model_version_func)
     job = get_job_result(job, queue)
 
@@ -82,6 +93,7 @@ async def get_model_version(
 
 
 async def get_project_setup(queue: Queue, project: str) -> Dict:
+    """Ask the worker to recover the project setup json str"""
     job = queue.enqueue("get_project_setup_json", project)
     job = get_job_result(job, queue)
 
@@ -91,7 +103,25 @@ async def get_project_setup(queue: Queue, project: str) -> Dict:
         return ""
 
 
-def get_model_prediction(
-    queue: Queue, tasks: List, model_prediction_func: str = "predict"
+async def get_model_predictions(
+    queue: Queue, tasks: List, context=None, model_prediction_func: str = "predict"
 ) -> Dict:
-    job = queue.enqueue(model_prediction_func, tasks, context=None)
+    """Passes the predict API call to the backend workers and waits for a
+    result.
+
+    Args:
+        queue: The rq.Queue object to pass the job to
+        tasks: The list of tasks from LabelStudio
+        context: The context parameter for interactive predictions from LabelStudio
+        model_prediction_func: The name of the Worker class function to use for
+            prediction
+    Returns:
+        results dictionary
+    """
+    job = queue.enqueue(model_prediction_func, tasks, context=context)
+    job = get_job_result(job, queue)
+
+    if job.result:
+        return job.result
+    else:
+        return dict()

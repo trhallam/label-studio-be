@@ -1,14 +1,34 @@
+from typing import Dict, List, Optional
+import logging
+
 from rq import Queue
 from rq.job import Job
-from rq.worker import WorkerStatus, SimpleWorker, BaseWorker
+from rq.logutils import setup_loghandlers
+from rq.worker import SimpleWorker
+
+from label_studio_ml.response import ModelResponse
 
 from .api.models import SetupModel
+
+LOGGER_NAME = "berq:Worker"
+logger = logging.getLogger(LOGGER_NAME)
 
 
 class LabelStudioBEWorker(SimpleWorker):
 
     redis_worker_namespace_prefix = "rq:worker:lsbe:"
     redis_lsberq_project_prefix = "lsberq:project:"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        setup_loghandlers(name=LOGGER_NAME)
+
+    def setup_model(self, *args, **kwargs):
+        """Setup your model here. This should be called in the
+        sub-classed __init__
+        """
+        # self.model = ?
+        raise NotImplementedError
 
     def get_worker_func(self, func_name: str) -> callable:
         """Returns a function of the class instance from it's name.
@@ -42,10 +62,45 @@ class LabelStudioBEWorker(SimpleWorker):
         setup = self.get_project_setup(project)
         return setup.model_dump_json()
 
-    def predict(self):
-        raise NotImplementedError
+    def predict(
+        self, project: str, tasks: List[Dict], context: Optional[Dict] = None, **kwargs
+    ) -> ModelResponse:
+        """Dispatches work to the model prediction logic
 
-    def fit(self):
+        Args:
+            project: Label Studio project ID
+            tasks: [Label Studio tasks in JSON format](https://labelstud.io/guide/task_format.html)
+            context: [Label Studio context in JSON format](https://labelstud.io/guide/ml_create#Implement-prediction-logic)
+
+        Returns:
+            model_response
+                ModelResponse(predictions=predictions) with
+                predictions: [Predictions array in JSON format](https://labelstud.io/guide/export.html#Label-Studio-JSON-format-of-annotated-tasks)
+        """
+        setup = self.get_project_setup(project)
+
+        logger.debug(str(setup))
+
+        model = getattr(self, "model", None)
+
+        if model is None or not tasks:
+            logger.debug("No tasks to run")
+            return []
+
+        if context and context.get("result"):
+            # the user has provided context, so we are in prompt based prediction
+            logger.debug("Prompt Prediction")
+            predictions = model.prompt_predict(tasks, context=context, **kwargs)
+        elif tasks and context == None:
+            logger.debug("Pre-annotation")
+            # apply auto segmentation to input tasks and return many predictions
+            predictions = model.auto_predict(tasks, **kwargs)
+
+        response = ModelResponse(predictions=predictions)
+        # logger.debug(f"{response.model_dump()}")
+        return response
+
+    def fit(self, *args, **kwargs) -> Dict:
         raise NotImplementedError
 
     def execute_job(self, job: Job, queue: Queue):
