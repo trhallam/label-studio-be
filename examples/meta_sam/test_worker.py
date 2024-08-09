@@ -55,13 +55,3 @@ def samworker(test_services, docker_services, docker_services_sam, docker_ip):
 
 def test_samworker_start(samworker):
     assert len(samworker["samworkers"]) == 1
-
-@pytest.fixture(scope="session")
-def check_sam_requirements():
-    requirements = EXAMPLE_PATH / "requirements.txt"
-    with open(requirements, "r") as f:
-        lines = f.readlines()
-
-    return lines
-
-def test_
