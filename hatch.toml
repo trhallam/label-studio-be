@@ -1,0 +1,33 @@
+[version]
+source = "vcs"
+
+[build.hooks.vcs]
+version-file = "src/label_studio_berq/_version.py"
+
+[version.raw-options]
+local_scheme = "no-local-version"
+
+[metadata]
+allow-direct-references = true
+
+[envs.default.scripts]
+# quick links to start the API server in dev/run modes.
+dev = [
+    "fastapi dev src/label_studio_berq/api"
+]
+run = [
+    "fastapi run src/label_studio_berq/api"
+]
+rq-worker-dev = [
+    "rq worker -v --logging_level INFO --max-idle-time 9999999999 --worker-class 'label_studio_berq.worker.LabelStudioBEWorker' berq"
+]
+
+[envs.hatch-test]
+extra-dependencies = [
+    "pytest",
+    "pytest-asyncio",
+    "pytest-docker"
+]
+
+[[envs.hatch-test.matrix]]
+python = ["3.12", "3.11", "3.10"]
