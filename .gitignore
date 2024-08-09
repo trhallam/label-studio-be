@@ -3,6 +3,7 @@ tests/resources/.cache
 __pycache__
 .pytest_cache
 .vscode
+cache*
 
 _version.py
 

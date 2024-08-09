@@ -20,7 +20,7 @@ def test_get_rq_worker_info(test_services):
     assert values[b"queues"] == b"pytest1,pytest2"
 
 
-def test_get_rq_worker_status(test_services):
+def test_get_rq_worker_status(test_services, patch_redis):
     rqworker = test_services["workers"][0]
     worker_status = get_rq_worker_status()
     worker_status = asyncio.run(worker_status)
