@@ -21,6 +21,7 @@ from label_studio_berq.mediaret import MediaCache
 from label_studio_berq.utils import masks2polypoints, pix2pc, simplify_polygon
 
 MODEL_NAME = "MetaSAM"
+MODEL_TYPE_CHOICES = ["vit_h", "vit_b", "vit_l"]
 MODEL_VERSION = "0.1.0"
 
 logger = logging.getLogger("SamModel")
@@ -164,9 +165,6 @@ class SamModel(LabelStudioMLBase, SamAutomaticMaskGenerator):
 
     [Link]
 
-    Env Vars:
-        LSBE_MODEL_PATH
-        LSBE_SAM_MODEL_TYPE [vit_l, vit_b, vit_h]
     """
 
     model_name = MODEL_NAME
@@ -174,20 +172,26 @@ class SamModel(LabelStudioMLBase, SamAutomaticMaskGenerator):
 
     def __init__(
         self,
-        project_id: Optional[str] = None,
-        label_config=None,
+        model_path: os.PathLike,
+        model_type: str,
+        # project_id: Optional[str] = None,
+        # label_config=None,
     ):
-        super().__init__(project_id=project_id, label_config=label_config)
+        """
+        Args:
+            model_path: The path to the model checkpoint
+            model_type: The type of SAM model stored in the model_path [vit_l, vit_b, vit_h]
+        """
+        # super().__init__(project_id=project_id, label_config=label_config)
         self.cache = MediaCache(10)
-
-        if path := os.environ.get("LSBE_MODEL_PATH"):
-            self.model_ckpt_path = pathlib.Path(path)
-        else:
-            raise ValueError("LSBE_MODEL_PATH not set")
-        self.model_ckpt_type = os.environ.get("LSBE_SAM_MODEL_TYPE")
+        self.model_ckpt_path = pathlib.Path(model_path)
+        self.model_ckpt_type = model_type
+        assert (
+            self.model_ckpt_type in MODEL_TYPE_CHOICES
+        ), f"{model_type} is not a valid checkpoint type"
         if not self.model_ckpt_path.exists():
             raise FileNotFoundError(
-                f"The SAM checkpoint was not found for LSBE_MODEL_PATH={self.model_ckpt_path}"
+                f"The SAM checkpoint was not found for model-path={self.model_ckpt_path}"
             )
         logger.info(
             f"Using SAM model {self.model_ckpt_path} with type {self.model_ckpt_type}"
@@ -353,7 +357,7 @@ class SamModel(LabelStudioMLBase, SamAutomaticMaskGenerator):
         ]
         return mask_results, polygon_results
 
-    def _prompt_predict(
+    def prompt_predict(
         self, tasks: List[Dict], context: Optional[Dict] = None, **kwargs
     ) -> List[dict]:
         """Interactive prediction processing. Takes point or box inputs and returns

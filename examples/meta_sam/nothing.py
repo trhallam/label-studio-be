@@ -3,10 +3,9 @@ import os
 import pathlib
 import json
 
-# from models import SamModel
+from .model import SamModel
 
-# TESTS_PATH = pathlib.Path(__file__).parent
-
+TESTS_PATH = pathlib.Path(__file__).parent
 
 # @pytest.fixture(scope="module")
 # def sam_model(model_sam_vit_b, label_config_sam):

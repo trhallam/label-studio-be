@@ -1,0 +1,30 @@
+name: label-studio-berq
+
+services:
+  sam-ml-backend:
+    container_name: sam-ml-backend
+    # network_mode: "host"
+    build:
+      context: .
+      additional_contexts:
+        - project=../../.
+      dockerfile: sam.Dockerfile
+    command:
+      - --model-path
+      - /models/sam_vit_b_01ec64.pth
+      - --model-type
+      - vit_b
+      - --redis-host
+      - pytest-label-studio-berq-redis-1
+      - --port
+      - "6379"
+      - test-sam
+    volumes:
+      - ~/projects/models/sam:/models
+    networks:
+      - pytest
+
+networks:
+  pytest:
+    name: pytest-label-studio-berq_pytest
+    external: true
