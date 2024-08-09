@@ -83,11 +83,14 @@ class LabelStudioBEWorker(SimpleWorker):
 
         model = getattr(self, "model", None)
 
-        if model is None or not tasks:
+        predictions = []
+        if model is None:
+            logger.debug("No model found in worker")
+        elif setup is None:
+            logger.debug("Could not find project setup")
+        elif not tasks:
             logger.debug("No tasks to run")
-            return []
-
-        if context and context.get("result"):
+        elif context and context.get("result"):
             # the user has provided context, so we are in prompt based prediction
             logger.debug("Prompt Prediction")
             predictions = model.prompt_predict(tasks, context=context, **kwargs)
